@@ -1,7 +1,7 @@
 <?php
 namespace GoetasWebservices\WsdlToPhp\Generation;
 
-use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use GoetasWebservices\XML\SOAPReader\Soap\OperationMessage;
 use GoetasWebservices\XML\SOAPReader\Soap\Service;
 use GoetasWebservices\Xsd\XsdToPhp\Jms\YamlConverter;
@@ -10,6 +10,11 @@ abstract class SoapConverter
 {
     const SOAP = 'http://schemas.xmlsoap.org/soap/envelope/';
     const SOAP_12 = 'http://www.w3.org/2003/05/soap-envelope';
+
+    /**
+     * @var \Doctrine\Inflector\Inflector
+     */
+    protected $inflector;
 
     protected $baseNs = [
         '1.1' => [
@@ -26,9 +31,10 @@ abstract class SoapConverter
 
     public function __construct(array $baseNs = array())
     {
-        if ($baseNs){
-            $this->baseNs = $baseNs;
-        }
+      if ($baseNs) {
+          $this->baseNs = $baseNs;
+      }
+      $this->inflector = InflectorFactory::create()->build();
     }
 
     public function visitServices(array $services)
